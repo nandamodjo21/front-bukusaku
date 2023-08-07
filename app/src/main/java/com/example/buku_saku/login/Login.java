@@ -16,7 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.buku_saku.R;
-import com.example.buku_saku.home.Home;
+import com.example.buku_saku.home.HomesActivity;
 import com.example.buku_saku.koneksi.ApiConnect;
 import com.example.buku_saku.session.SharedPref;
 
@@ -38,6 +38,10 @@ public class Login extends AppCompatActivity {
         l_username = findViewById(R.id.user);
         l_password = findViewById(R.id.pass);
         login = findViewById(R.id.btn_login);
+
+        if (SharedPref.getInstance(this).isLoggedIn()){
+            startActivity(new Intent(getApplicationContext(),HomesActivity.class));
+        }
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,16 +75,17 @@ public class Login extends AppCompatActivity {
 
                 try {
                     JSONObject js = response.getJSONObject("data");
+                    String message = response.getString("message");
                   if (response.getInt("status") == 200){
                       SharedPref.getInstance(getApplicationContext())
                               .session(js.getString("id_login")
                               ,js.getString("nik")
                               ,js.getString("username"));
 
-                      Toast.makeText(getApplicationContext(),js.getString("message"),Toast.LENGTH_SHORT).show();
-                      startActivity(new Intent(getApplicationContext(),Home.class));
+                      Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                      startActivity(new Intent(getApplicationContext(), HomesActivity.class));
                   } else {
-                      Toast.makeText(getApplicationContext(),js.getString("message"),Toast.LENGTH_SHORT).show();
+                      Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
                   }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

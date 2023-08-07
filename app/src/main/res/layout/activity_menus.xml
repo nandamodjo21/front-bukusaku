@@ -21,19 +21,20 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="410dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
         <ImageView
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:id="@+id/backhome"
             android:background="@drawable/home"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/hm"
+            android:id="@+id/homee"
             android:text="Home"
             android:textColor="@color/black"
             android:textSize="20dp"
@@ -71,12 +72,13 @@
         <ImageView
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:id="@+id/log"
             android:background="@drawable/logout"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/navigation_bar_item_labels_group"
+            android:id="@+id/lgo"
             android:text="Logout"
             android:textColor="@color/black"
             android:textSize="20dp"
