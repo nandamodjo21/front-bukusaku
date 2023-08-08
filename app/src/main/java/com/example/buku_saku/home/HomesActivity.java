@@ -120,7 +120,7 @@ public class HomesActivity extends AppCompatActivity {
 //                String idString = String.valueOf(pilih.getId());
 
 
-                Intent intent = new Intent(getApplicationContext(), Pdf.class);
+                Intent intent = new Intent(getApplicationContext(), Uji.class);
 //                intent.putExtra("ID",idString);
 //                intent.putExtra("MATERI", materi);
                 intent.putExtra("FILE",fileMateri);

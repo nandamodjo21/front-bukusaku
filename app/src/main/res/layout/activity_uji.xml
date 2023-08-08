@@ -4,11 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".home.Uji">
 
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/webView"/>
+    <TextView
+        android:layout_marginBottom="500dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:text=""
+        android:textStyle="bold"
+        android:id="@+id/txt"/>
+
+    <Button
+        android:layout_marginTop="300dp"
+        android:id="@+id/openPdfButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buka PDF"
+        />
+
 
 </RelativeLayout>
