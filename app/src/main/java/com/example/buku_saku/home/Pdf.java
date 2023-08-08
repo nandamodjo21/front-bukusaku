@@ -2,11 +2,14 @@ package com.example.buku_saku.home;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,8 +25,10 @@ import com.example.buku_saku.koneksi.ApiConnect;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 public class Pdf extends AppCompatActivity {
 
@@ -33,6 +38,7 @@ public class Pdf extends AppCompatActivity {
     private ParcelFileDescriptor parcelFileDescriptor;
 
     private WebView webView;
+    private RequestQueue requestQueue;
 
 
 
@@ -42,118 +48,77 @@ public class Pdf extends AppCompatActivity {
         setContentView(R.layout.activity_pdf);
 
         pdfImageView = findViewById(R.id.pdfImageView);
+        requestQueue = Volley.newRequestQueue(this);
 
-        webView = findViewById(R.id.webView);
+        Intent intent = getIntent();
+        String fileMateri = intent.getStringExtra("FILE");
+       // Ganti "nama_file.pdf" dengan nama yang sesuai
+        String pdfApiUrl = ApiConnect.url_download + "?filename=" + fileMateri;
+        downloadPdfFromApi(pdfApiUrl);
 
 
 
-
-        downloadAndDisplayPdf();
-//        File file = new File(getFilesDir(), "file.pdf");
-//
-//        try {
-//            openPdfRenderer(file);
-//            displayPage(0);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
-    private void downloadAndDisplayPdf() {
-        String id = getIntent().getStringExtra("ID");
-        String pdfUrl = ApiConnect.url_download + id;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, pdfUrl, new Response.Listener<String>() {
+    private void downloadPdfFromApi(String pdfApiUrl) {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, pdfApiUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-               downloadAndSavePdf(response);
+
+                try {
+                    File pdfFile = new File(getExternalFilesDir(null), "materi.pdf");
+                    try (OutputStream outputStream = new FileOutputStream(pdfFile)) {
+                        byte[] pdfData = response.getBytes();
+                        outputStream.write(pdfData);
+                        outputStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("DownloadSuccess", "PDF successfully downloaded and saved.");
+
+
+
+                    parcelFileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
+                    pdfRenderer = new PdfRenderer(parcelFileDescriptor);
+                    showPage(0);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
                 Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
 
             }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(this);requestQueue.add(stringRequest);
+        }); requestQueue.add(stringRequest);
     }
 
-    private void downloadAndSavePdf(String pdfUrl) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String filename = "downloaded_pdf.pdf"; // Nama berkas yang akan disimpan
-        File pdfFile = new File(getFilesDir(), filename);
+    private void showPage(int i) {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, pdfUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    // Simpan berkas PDF ke penyimpanan perangkat
-                    FileOutputStream outputStream = new FileOutputStream(pdfFile);
-                    outputStream.write(response.getBytes());
-                    outputStream.close();
-
-                    // Buka dan tampilkan berkas PDF menggunakan PdfRenderer
-                    openAndDisplayPdf(pdfFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        requestQueue.add(stringRequest);
-    }
-
-    private void openAndDisplayPdf(File pdfFile) {
-        try {
-            // Buka PdfRenderer dengan berkas yang telah diunduh
-            parcelFileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
-            if (parcelFileDescriptor != null) {
-                pdfRenderer = new PdfRenderer(parcelFileDescriptor);
-                displayPage(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void displayPage(int pageNumber) {
-        if (pdfRenderer != null && pdfRenderer.getPageCount() > pageNumber) {
-            if (currentPage != null) {
-                currentPage.close();
-            }
-
-            currentPage = pdfRenderer.openPage(pageNumber);
-
-            Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
-            currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-            pdfImageView.setImageBitmap(bitmap);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         if (currentPage != null) {
             currentPage.close();
         }
-        if (pdfRenderer != null) {
-            pdfRenderer.close();
-        }
-        try {
-            if (parcelFileDescriptor != null) {
-                parcelFileDescriptor.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        currentPage = pdfRenderer.openPage(i);
+
+        // Buat Bitmap untuk menampilkan halaman PDF
+        Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
+
+        // Atur halaman PDF ke dalam Bitmap
+        currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+
+        // Tampilkan Bitmap di ImageView
+        pdfImageView.setImageBitmap(bitmap);
+
     }
-      
     }
+
+
 
 
 

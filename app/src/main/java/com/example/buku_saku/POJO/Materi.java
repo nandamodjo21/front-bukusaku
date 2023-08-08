@@ -2,9 +2,15 @@ package com.example.buku_saku.POJO;
 
 public class Materi {
 
-
-
     private String id;
+    private String materi;
+    private FileData fileData;
+
+    public Materi(FileData fileData) {
+        this.id = id;
+        this.materi = materi;
+        this.fileData = fileData;
+    }
 
     public String getId() {
         return id;
@@ -14,9 +20,6 @@ public class Materi {
         this.id = id;
     }
 
-    private String materi;
-    private String fileMateri;
-
     public String getMateri() {
         return materi;
     }
@@ -25,17 +28,12 @@ public class Materi {
         this.materi = materi;
     }
 
-    public String getFileMateri() {
-        return fileMateri;
+    public FileData getFileData() {
+        return fileData;
     }
 
-    public void setFileMateri(String fileMateri) {
-        this.fileMateri = fileMateri;
-    }
-
-    public Materi(String id,String materi, String fileMateri) {
-        this.id=id;
-        this.materi = materi;
-        this.fileMateri = fileMateri;
+    public void setFileData(FileData fileData) {
+        this.fileData = fileData;
     }
 }
+

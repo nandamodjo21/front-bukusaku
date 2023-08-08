@@ -35,10 +35,9 @@ public class MateriArrayAdapter extends ArrayAdapter<Materi> {
         // Mengambil elemen TextView di layout list_item_buku dan mengisi datanya
         TextView textView = convertView.findViewById(R.id.list);
         if (materi != null) {
-            textView.setText(materi.getMateri());
+            textView.setText(materi.getFileData().getFileName()); // Mengambil nama file dari objek FileData dalam Materi
         }
 
         return convertView;
     }
 }
-

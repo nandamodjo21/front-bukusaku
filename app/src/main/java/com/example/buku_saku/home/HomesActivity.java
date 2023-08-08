@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.buku_saku.POJO.FileData;
 import com.example.buku_saku.POJO.Materi;
 import com.example.buku_saku.R;
 import com.example.buku_saku.adapter.MateriArrayAdapter;
@@ -69,9 +70,11 @@ public class HomesActivity extends AppCompatActivity {
                         String id = jsonObject.getString("id");
                         String materi = jsonObject.getString("materi");
                         String fileMateri = jsonObject.getString("fileMateri");
+
+                        FileData fileData = new FileData(fileMateri);
                         String ms = "not found";
                         System.out.println(materi);
-                        Materi dataMateri = new Materi(materi, fileMateri, id);
+                        Materi dataMateri = new Materi(fileData);
 
                         if (dataMateri != null){
                             arrayList.add(dataMateri);
@@ -112,14 +115,14 @@ public class HomesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Materi pilih = arrayList.get(position);
-              String materi = pilih.getMateri();
-              String fileMateri = pilih.getFileMateri();
-                String idString = String.valueOf(pilih.getId());
+//              String materi = pilih.getMateri();
+              String fileMateri = pilih.getFileData().getFileName();
+//                String idString = String.valueOf(pilih.getId());
 
 
                 Intent intent = new Intent(getApplicationContext(), Pdf.class);
-                intent.putExtra("ID",idString);
-                intent.putExtra("MATERI", materi);
+//                intent.putExtra("ID",idString);
+//                intent.putExtra("MATERI", materi);
                 intent.putExtra("FILE",fileMateri);
                 startActivity(intent);
             }
