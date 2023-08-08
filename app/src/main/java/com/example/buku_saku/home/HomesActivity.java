@@ -40,7 +40,7 @@ public class HomesActivity extends AppCompatActivity {
     private TextView notfound;
     private ArrayList<Materi> arrayList;
     private MateriArrayAdapter adapter;
-    private Button pdf;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -48,7 +48,6 @@ public class HomesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homes);
 
-        pdf = findViewById(R.id.pdf);
         notfound = findViewById(R.id.not);
         ls = findViewById(R.id.listView);
         list = findViewById(R.id.mn);
@@ -56,12 +55,7 @@ public class HomesActivity extends AppCompatActivity {
         adapter = new MateriArrayAdapter(this,arrayList);
         ls.setAdapter(adapter);
 
-        pdf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Pdf.class));
-            }
-        });
+
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -72,11 +66,12 @@ public class HomesActivity extends AppCompatActivity {
                     for (int i = 0; i < response.length(); i++){
                         JSONObject jsonObject = response.getJSONObject(i);
 
+                        String id = jsonObject.getString("id");
                         String materi = jsonObject.getString("materi");
                         String fileMateri = jsonObject.getString("fileMateri");
                         String ms = "not found";
                         System.out.println(materi);
-                        Materi dataMateri = new Materi(materi, fileMateri);
+                        Materi dataMateri = new Materi(materi, fileMateri, id);
 
                         if (dataMateri != null){
                             arrayList.add(dataMateri);
@@ -119,9 +114,11 @@ public class HomesActivity extends AppCompatActivity {
               Materi pilih = arrayList.get(position);
               String materi = pilih.getMateri();
               String fileMateri = pilih.getFileMateri();
+                String idString = String.valueOf(pilih.getId());
 
 
-                Intent intent = new Intent(getApplicationContext(), DetailMateri.class);
+                Intent intent = new Intent(getApplicationContext(), Pdf.class);
+                intent.putExtra("ID",idString);
                 intent.putExtra("MATERI", materi);
                 intent.putExtra("FILE",fileMateri);
                 startActivity(intent);

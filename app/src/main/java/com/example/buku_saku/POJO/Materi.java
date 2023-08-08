@@ -2,6 +2,18 @@ package com.example.buku_saku.POJO;
 
 public class Materi {
 
+
+
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     private String materi;
     private String fileMateri;
 
@@ -21,7 +33,8 @@ public class Materi {
         this.fileMateri = fileMateri;
     }
 
-    public Materi(String materi, String fileMateri) {
+    public Materi(String id,String materi, String fileMateri) {
+        this.id=id;
         this.materi = materi;
         this.fileMateri = fileMateri;
     }

@@ -7,17 +7,22 @@ import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.buku_saku.R;
 import com.example.buku_saku.koneksi.ApiConnect;
-import com.joanzapata.pdfview.PDFView;
+
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Pdf extends AppCompatActivity {
@@ -27,7 +32,9 @@ public class Pdf extends AppCompatActivity {
     private PdfRenderer.Page currentPage;
     private ParcelFileDescriptor parcelFileDescriptor;
 
-    private PDFView pdfView;
+    private WebView webView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,50 +43,84 @@ public class Pdf extends AppCompatActivity {
 
         pdfImageView = findViewById(R.id.pdfImageView);
 
-        pdfView = findViewById(R.id.pdf);
+        webView = findViewById(R.id.webView);
+
+
 
 
         downloadAndDisplayPdf();
+//        File file = new File(getFilesDir(), "file.pdf");
+//
+//        try {
+//            openPdfRenderer(file);
+//            displayPage(0);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+    private void downloadAndDisplayPdf() {
+        String id = getIntent().getStringExtra("ID");
+        String pdfUrl = ApiConnect.url_download + id;
 
-        // Ubah "file.pdf" dengan alamat file PDF Anda di penyimpanan perangkat.
-        File file = new File(getFilesDir(), "file.pdf");
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, pdfUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
+               downloadAndSavePdf(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);requestQueue.add(stringRequest);
+    }
+
+    private void downloadAndSavePdf(String pdfUrl) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String filename = "downloaded_pdf.pdf"; // Nama berkas yang akan disimpan
+        File pdfFile = new File(getFilesDir(), filename);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, pdfUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    // Simpan berkas PDF ke penyimpanan perangkat
+                    FileOutputStream outputStream = new FileOutputStream(pdfFile);
+                    outputStream.write(response.getBytes());
+                    outputStream.close();
+
+                    // Buka dan tampilkan berkas PDF menggunakan PdfRenderer
+                    openAndDisplayPdf(pdfFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        requestQueue.add(stringRequest);
+    }
+
+    private void openAndDisplayPdf(File pdfFile) {
         try {
-            openPdfRenderer(file);
-            displayPage(0);
+            // Buka PdfRenderer dengan berkas yang telah diunduh
+            parcelFileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
+            if (parcelFileDescriptor != null) {
+                pdfRenderer = new PdfRenderer(parcelFileDescriptor);
+                displayPage(0);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void downloadAndDisplayPdf() {
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ApiConnect.url_file, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                String pdfUrl = response;
-                downloadPdfFile(pdfUrl);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-    }
-
-    private void downloadPdfFile(String pdfUrl) {
-
-    }
-
-    private void openPdfRenderer(File file) throws IOException {
-        parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-        if (parcelFileDescriptor != null) {
-            pdfRenderer = new PdfRenderer(parcelFileDescriptor);
-        }
-
-}
     private void displayPage(int pageNumber) {
         if (pdfRenderer != null && pdfRenderer.getPageCount() > pageNumber) {
             if (currentPage != null) {
@@ -111,4 +152,11 @@ public class Pdf extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-}
+      
+    }
+
+
+
+    // Ubah "file.pdf" dengan alamat file PDF Anda di penyimpanan perangkat.
+
+
