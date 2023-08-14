@@ -1,30 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     tools:context=".home.Uji">
-
     <TextView
-        android:layout_marginBottom="500dp"
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:text="MATERI"
+        android:layout_marginBottom="50dp"
         android:textSize="20dp"
-        android:text=""
-        android:textStyle="bold"
-        android:id="@+id/txt"/>
+        android:textStyle="bold"/>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/pdf"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="10dp"
+                android:text=""
+                android:textStyle="bold"
+                android:id="@+id/txt"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
     <Button
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/openPdfButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Buka PDF"
         />
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SOAL"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/textSoal"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:id="@+id/ed_jawab"
+        android:hint="jawaban"
+        android:textColorHint="#5E5D5D"
+        android:textStyle="normal"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"/>
 
 
-</RelativeLayout>
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/btnjawab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JAWAB"
+        />
+
+
+</LinearLayout>

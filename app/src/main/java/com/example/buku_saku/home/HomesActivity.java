@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -60,18 +61,21 @@ public class HomesActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, ApiConnect.url_file, null, new Response.Listener<JSONArray>() {
+
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, ApiConnect.url_soal, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
                     for (int i = 0; i < response.length(); i++){
                         JSONObject jsonObject = response.getJSONObject(i);
 
-                        String id = jsonObject.getString("id");
+                        String id = jsonObject.getString("id_soal");
                         String materi = jsonObject.getString("materi");
-                        String fileMateri = jsonObject.getString("fileMateri");
+                        String fileMateri = jsonObject.getString("file_materi");
+                        String soal = jsonObject.getString("soal");
 
-                        FileData fileData = new FileData(fileMateri);
+                        FileData fileData = new FileData(fileMateri,soal,id);
                         String ms = "not found";
                         System.out.println(materi);
                         Materi dataMateri = new Materi(fileData);
@@ -118,12 +122,16 @@ public class HomesActivity extends AppCompatActivity {
 //              String materi = pilih.getMateri();
               String fileMateri = pilih.getFileData().getFileName();
 //                String idString = String.valueOf(pilih.getId());
+                String soal = pilih.getFileData().getSoal();
+                String soalId = pilih.getFileData().getIdSoal();
 
 
                 Intent intent = new Intent(getApplicationContext(), Uji.class);
 //                intent.putExtra("ID",idString);
 //                intent.putExtra("MATERI", materi);
                 intent.putExtra("FILE",fileMateri);
+                intent.putExtra("SOAL", soal );
+                intent.putExtra("ID",soalId);
                 startActivity(intent);
             }
         });

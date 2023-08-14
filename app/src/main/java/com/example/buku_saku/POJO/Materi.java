@@ -6,6 +6,16 @@ public class Materi {
     private String materi;
     private FileData fileData;
 
+    private String soal;
+
+    public String getSoal() {
+        return soal;
+    }
+
+    public void setSoal(String soal) {
+        this.soal = soal;
+    }
+
     public Materi(FileData fileData) {
         this.id = id;
         this.materi = materi;

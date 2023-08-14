@@ -41,7 +41,8 @@ public class Login extends AppCompatActivity {
 
         if (SharedPref.getInstance(this).isLoggedIn()){
             startActivity(new Intent(getApplicationContext(),HomesActivity.class));
-        }
+        } else {
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +62,8 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+        }
+
     }
 
     private void aksesLogin() throws JSONException{
