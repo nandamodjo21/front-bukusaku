@@ -19,7 +19,7 @@ public class Menus extends AppCompatActivity {
 
     private ImageView back,logout;
 
-    private TextView bk,lg;
+    private TextView bk,lg,user;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,9 @@ public class Menus extends AppCompatActivity {
         logout = findViewById(R.id.log);
         bk = findViewById(R.id.homee);
         lg = findViewById(R.id.lgo);
+        user = findViewById(R.id.textUser);
+
+        user.setText(SharedPref.getInstance(this).getKeyName());
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
