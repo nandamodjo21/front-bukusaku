@@ -9,8 +9,9 @@ public class SharedPref {
 
     private  static final String SHARED_PREF_NAME = "buku-saku";
     private static final  String KEY_ID = "id_login";
-    private static final String KEY_NIK = "nik";
+    private static final String KEY_NIK = "nim";
     private static final  String KEY_USERNAME = "username";
+    private static final String KEY_NAME = "nama";
 
     String channelnotif = "channelA" ;
     String channelid = "default" ;
@@ -30,13 +31,14 @@ public class SharedPref {
 
 
 
-    public  boolean session(String id_login, String nik, String username){
+    public  boolean session(String id_login, String nim, String username, String nama){
 
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_ID, id_login);
-        editor.putString(KEY_NIK, nik);
+        editor.putString(KEY_NIK, nim);
         editor.putString(KEY_USERNAME, username);
+        editor.putString(KEY_NAME, nama);
         editor.apply();
         return true;
     }
@@ -60,6 +62,10 @@ public class SharedPref {
     public String getKeyId(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_ID, null);
+    }
+    public String getKeyName(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_NAME, null);
     }
     public String getKeyUsername(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
