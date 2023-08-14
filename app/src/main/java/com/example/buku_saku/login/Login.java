@@ -82,8 +82,9 @@ public class Login extends AppCompatActivity {
                   if (response.getInt("status") == 200){
                       SharedPref.getInstance(getApplicationContext())
                               .session(js.getString("id_login")
-                              ,js.getString("nik")
-                              ,js.getString("username"));
+                              ,js.getString("nim")
+                              ,js.getString("username")
+                              ,js.getString("nama"));
 
                       Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
                       startActivity(new Intent(getApplicationContext(), HomesActivity.class));
