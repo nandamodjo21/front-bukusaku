@@ -62,7 +62,6 @@ public class Uji extends AppCompatActivity {
         String soal = intent.getStringExtra("SOAL");
          soalId = intent.getStringExtra("ID");
 
-         Toast.makeText(getApplicationContext(),soalId,Toast.LENGTH_SHORT).show();
 
 
         tekssoal.setText(soal);
