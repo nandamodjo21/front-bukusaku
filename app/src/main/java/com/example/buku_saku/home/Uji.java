@@ -109,7 +109,7 @@ public class Uji extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(),HomesActivity.class));
                         Toast.makeText(getApplicationContext(),response.getString("message"),Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(),response.getString("message"),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"jawaban sudah diisi!",Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -133,9 +133,16 @@ public class Uji extends AppCompatActivity {
         String pdfFileName = pdfApiUrl;
 
         File pdfFile = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), pdfFileName);
+//        Toast.makeText(getApplicationContext(), (CharSequence) pdfFile,Toast.LENGTH_SHORT).show();
+        System.out.println(pdfFile);
         if (pdfFile.exists()) {
             // Jika file PDF sudah ada, langsung buka
-            openPdfWithIntent(pdfFile);
+//            openPdfWithIntent(pdfFile);
+            openPdfTo(pdfFile);
+//            Intent intent = new Intent(getApplicationContext(), Pdf.class);
+//            intent.putExtra("data",pdfFile);
+//            startActivity(intent);
+//            finish();
         } else {
             // Jika file PDF belum ada, unduh terlebih dahulu
             downloadPdf(pdfApiUrl, pdfFile);
@@ -143,6 +150,13 @@ public class Uji extends AppCompatActivity {
         }
 
 
+
+    }
+
+    private void openPdfTo(File pdfFile) {
+        Intent intent = new Intent(this, Pdf.class);
+        intent.putExtra("pdf", pdfFile.getAbsolutePath());
+        startActivity(intent);
 
     }
 
@@ -184,4 +198,6 @@ public class Uji extends AppCompatActivity {
             Toast.makeText(this, "Tidak ada aplikasi yang dapat membuka PDF", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }
