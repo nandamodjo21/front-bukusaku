@@ -2,11 +2,13 @@ package com.example.buku_saku.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -16,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.buku_saku.R;
+import com.example.buku_saku.Register;
 import com.example.buku_saku.home.HomesActivity;
 import com.example.buku_saku.koneksi.ApiConnect;
 import com.example.buku_saku.session.SharedPref;
@@ -26,9 +29,11 @@ import org.json.JSONObject;
 public class Login extends AppCompatActivity {
     
     private EditText l_username, l_password;
+    private TextView regis;
     private Button login;
     String username,password;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,15 @@ public class Login extends AppCompatActivity {
         l_username = findViewById(R.id.user);
         l_password = findViewById(R.id.pass);
         login = findViewById(R.id.btn_login);
+        regis = findViewById(R.id.textRegis);
+
+        regis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Register.class));
+                finish();
+            }
+        });
 
         if (SharedPref.getInstance(this).isLoggedIn()){
             startActivity(new Intent(getApplicationContext(),HomesActivity.class));

@@ -18,44 +18,76 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LOGIN"
+        android:text="REGISTER"
         android:textSize="25dp"
         android:textStyle="bold"
         android:textColor="@color/black"/>
 
 
+
     <EditText
         android:layout_width="300dp"
         android:layout_height="60dp"
-        android:hint="username"
-        android:id="@+id/user"
+        android:hint="Nama"
+        android:id="@+id/r_nama"
         android:inputType="text"
         android:textColor="@color/black"
         android:textColorHint="@color/black"/>
     <EditText
         android:layout_width="300dp"
         android:layout_height="60dp"
-        android:hint="password"
-        android:id="@+id/pass"
+        android:hint="Nim"
+        android:id="@+id/r_nim"
+        android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"/>
+    <Spinner
+        android:id="@+id/jk"
+        android:layout_width="300dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"/>
+    <Spinner
+        android:id="@+id/agama"
+        android:layout_width="300dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:hint="username"
+        android:id="@+id/r_user"
+        android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:hint="Password"
+        android:id="@+id/r_pass"
         android:inputType="textPassword"
         android:textColor="@color/black"
         android:textColorHint="@color/black"/>
+
+
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_regist"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="LOGIN"
+        android:text="SIGNUP"
         android:layout_marginTop="40dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="register"
-        android:id="@+id/textRegis"
-        android:layout_marginTop="10dp"
         android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
         android:textColor="@color/black"
-        android:textStyle="bold"/>
-    
+        android:id="@+id/backLogin"
+        android:text="Login"/>
+
+
 
 
 

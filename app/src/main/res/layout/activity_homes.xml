@@ -53,23 +53,43 @@
         android:textColor="@color/black"/>
 
 
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp" />
-    <TextView
-        android:id="@+id/not"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
-        android:textSize="20dp"
-        android:textColor="#4E4545"
-        />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imagePdg"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/pdf"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text=""
+                android:textSize="20dp"
+                android:id="@+id/textMateri"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="soal"
+                android:id="@+id/btnSoal"
+                android:textColor="#07e425"
+                android:background="@drawable/custom1"/>
 
+        </LinearLayout>
 
+    </LinearLayout>
 
 
 </LinearLayout>

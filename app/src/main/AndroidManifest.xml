@@ -18,6 +18,10 @@
         android:theme="@style/Theme.Buku_saku"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Register"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.buku_saku.fileprovider"
@@ -30,16 +34,19 @@
 
         <activity
             android:name=".home.Uji"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".home.HomesActivity" />
         <activity
             android:name=".home.Pdf"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".home.HomesActivity" />
         <activity
             android:name=".home.DetailMateri"
             android:exported="false" />
         <activity
             android:name=".menu.Menus"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".home.HomesActivity" />
         <activity
             android:name=".home.HomesActivity"
             android:exported="false" />

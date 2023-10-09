@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -40,9 +41,9 @@ import java.io.File;
 
 public class Uji extends AppCompatActivity {
 
-    private Button openPdfButton,btnjwb;
-    private String pdfApiUrl,jawaban, soalId;
-    private TextView textView,tekssoal;
+    private Button btnjwb;
+    private String jawaban, soalId;
+    private TextView tekssoal;
 
 
     @SuppressLint("MissingInflatedId")
@@ -50,31 +51,24 @@ public class Uji extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uji);
-        openPdfButton = findViewById(R.id.openPdfButton);
+
         tekssoal = findViewById(R.id.textSoal);
         EditText jawab = findViewById(R.id.ed_jawab);
         btnjwb = findViewById(R.id.btnjawab);
-        textView = findViewById(R.id.txt);
 
         //intent dari home
         Intent intent = getIntent();
-        String fileMateri = intent.getStringExtra("FILE");
-        String soal = intent.getStringExtra("SOAL");
-         soalId = intent.getStringExtra("ID");
+
+        String soal = intent.getStringExtra("soal");
+         soalId = intent.getStringExtra("id");
 
 
 
         tekssoal.setText(soal);
-        textView.setText(fileMateri);
         // Ganti "nama_file.pdf" dengan nama yang sesuai
-        pdfApiUrl = ApiConnect.url_download + "?filename=" + fileMateri;
 
-        openPdfButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openPdf(pdfApiUrl);
-            }
-        });
+
+
 
         btnjwb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +94,8 @@ public class Uji extends AppCompatActivity {
         jsonObject.put("idUser", SharedPref.getInstance(getApplicationContext()).getKeyId());
         jsonObject.put("soal",soalId);
         jsonObject.put("jawaban",jawaban);
+
+        System.out.println(jsonObject);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, ApiConnect.url_jawaban, jsonObject, new Response.Listener<JSONObject>() {
             @Override
@@ -127,77 +123,19 @@ public class Uji extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext()); requestQueue.add(jsonObjectRequest);
 
     }
-
-    private void openPdf(String pdfApiUrl) {
-
-        String pdfFileName = pdfApiUrl;
-
-        File pdfFile = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), pdfFileName);
-//        Toast.makeText(getApplicationContext(), (CharSequence) pdfFile,Toast.LENGTH_SHORT).show();
-        System.out.println(pdfFile);
-        if (pdfFile.exists()) {
-            // Jika file PDF sudah ada, langsung buka
-//            openPdfWithIntent(pdfFile);
-            openPdfTo(pdfFile);
-//            Intent intent = new Intent(getApplicationContext(), Pdf.class);
-//            intent.putExtra("data",pdfFile);
-//            startActivity(intent);
-//            finish();
-        } else {
-            // Jika file PDF belum ada, unduh terlebih dahulu
-            downloadPdf(pdfApiUrl, pdfFile);
-            Toast.makeText(getApplicationContext(),"Pdf masih di download",Toast.LENGTH_SHORT).show();
-        }
-
-
-
-    }
-
-    private void openPdfTo(File pdfFile) {
-        Intent intent = new Intent(this, Pdf.class);
-        intent.putExtra("pdf", pdfFile.getAbsolutePath());
-        startActivity(intent);
-
-    }
-
-    private void downloadPdf(String pdfApiUrl, File pdfFile) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(pdfApiUrl))
-                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                .setAllowedOverRoaming(false)
-                .setTitle("materi.pdf")
-                .setDescription("Downloading PDF file...")
-                .setDestinationUri(Uri.fromFile(pdfFile))
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        if (downloadManager != null) {
-            long downloadId = downloadManager.enqueue(request);
-
-            BroadcastReceiver onComplete = new BroadcastReceiver() {
-                public void onReceive(Context ctxt, Intent intent) {
-                    openPdfWithIntent(pdfFile);
-                    unregisterReceiver(this);
-                }
-            };
-
-        }
-    }
-
-    private void openPdfWithIntent(File pdfFile) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri pdfUri = FileProvider.getUriForFile(this, "com.example.buku_saku.fileprovider", pdfFile);
-
-        intent.setDataAndType(pdfUri, "application/pdf");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        try {
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Pada metode ini, Anda dapat menambahkan logika untuk mengatasi perilaku tombol kembali
+            // Contoh: Jika Anda ingin kembali ke HomesActivity
+            Intent intent = new Intent(this, HomesActivity.class);
             startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            // Handle jika tidak ada aplikasi yang dapat menangani tipe MIME PDF
-            Toast.makeText(this, "Tidak ada aplikasi yang dapat membuka PDF", Toast.LENGTH_SHORT).show();
-        }
-    }
 
+            // Kembalikan nilai true untuk menunjukkan bahwa Anda telah menangani peristiwa tombol kembali
+            return true;
+        }
+        // Jika bukan tombol kembali, biarkan perilaku default bekerja
+        return super.onKeyDown(keyCode, event);
+    }
 
 }

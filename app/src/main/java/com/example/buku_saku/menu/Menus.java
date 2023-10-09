@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,5 +72,21 @@ public class Menus extends AppCompatActivity {
                 }
             }
         });
+
+
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Pada metode ini, Anda dapat menambahkan logika untuk mengatasi perilaku tombol kembali
+            // Contoh: Jika Anda ingin kembali ke HomesActivity
+            Intent intent = new Intent(this, HomesActivity.class);
+            startActivity(intent);
+
+            // Kembalikan nilai true untuk menunjukkan bahwa Anda telah menangani peristiwa tombol kembali
+            return true;
+        }
+        // Jika bukan tombol kembali, biarkan perilaku default bekerja
+        return super.onKeyDown(keyCode, event);
     }
 }

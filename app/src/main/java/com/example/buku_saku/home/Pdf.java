@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -30,7 +33,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Pdf extends AppCompatActivity {
     private PDFView pdfView;
@@ -43,20 +49,66 @@ public class Pdf extends AppCompatActivity {
 
         pdfView = findViewById(R.id.pdfview);
 
-        String pdf = getIntent().getStringExtra("pdf");
+        String pdf = getIntent().getStringExtra("data");
 
-        openPdfWithIntent(new File(pdf));
+        new LoadPdfTask().execute(pdf);
 
     }
+    private class LoadPdfTask extends AsyncTask<String, Void, InputStream> {
 
-    private void openPdfWithIntent(File file) {
+        @Override
+        protected InputStream doInBackground(String... urls) {
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
 
-        pdfView.fromFile(file).swipeVertical(true).enableSwipe(true)
-                .showPageWithAnimation(true)
-                .enableAnnotationRendering(true)
-                .enableDoubletap(true)
-        .load();
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    return connection.getInputStream();
+                } else {
+                   Toast.makeText(getApplicationContext(),"error bro",Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(InputStream inputStream) {
+            if (inputStream != null) {
+                pdfView.fromStream(inputStream).load();
+            } else {
+                Toast.makeText(getApplicationContext(),"error bro",Toast.LENGTH_SHORT).show();
+                // Handle error
+            }
+        }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Pada metode ini, Anda dapat menambahkan logika untuk mengatasi perilaku tombol kembali
+            // Contoh: Jika Anda ingin kembali ke HomesActivity
+            Intent intent = new Intent(this, HomesActivity.class);
+            startActivity(intent);
+
+            // Kembalikan nilai true untuk menunjukkan bahwa Anda telah menangani peristiwa tombol kembali
+            return true;
+        }
+        // Jika bukan tombol kembali, biarkan perilaku default bekerja
+        return super.onKeyDown(keyCode, event);
+    }
+
+//    private void openPdfWithIntent(File file) {
+//
+//        pdfView.fromFile(file).swipeVertical(true).enableSwipe(true)
+//                .showPageWithAnimation(true)
+//                .enableAnnotationRendering(true)
+//                .enableDoubletap(true)
+//        .load();
+//    }
 
 
 }

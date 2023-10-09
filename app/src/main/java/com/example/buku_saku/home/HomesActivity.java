@@ -1,6 +1,7 @@
 package com.example.buku_saku.home;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.buku_saku.R;
 import com.example.buku_saku.koneksi.ApiConnect;
+import com.example.buku_saku.menu.Menus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,9 +28,13 @@ import org.json.JSONObject;
 
 public class HomesActivity extends AppCompatActivity {
 
-    private ImageView image;
-    private String pdApiUrl;
+    private ImageView image,mna;
+    private String pdApiUrl,soal2,id;
     private TextView materi;
+
+
+
+    private AppCompatButton btnSoal;
 
 
 
@@ -40,7 +46,16 @@ public class HomesActivity extends AppCompatActivity {
 
         image = findViewById(R.id.imagePdg);
         materi = findViewById(R.id.textMateri);
+        btnSoal = findViewById(R.id.btnSoal);
+        mna = findViewById(R.id.mn);
 
+        mna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Menus.class));
+                finish();
+            }
+        });
 
 
 
@@ -59,10 +74,10 @@ public class HomesActivity extends AppCompatActivity {
                     for (int i = 0; i < response.length(); i++){
                         JSONObject jsonObject = response.getJSONObject(i);
 
-                        String id = jsonObject.getString("id_soal");
+                         id = jsonObject.getString("id_soal");
                         String nama_materi = jsonObject.getString("materi");
                         String fileMateri = jsonObject.getString("file_materi");
-                        String soal = jsonObject.getString("soal");
+                         soal2 = jsonObject.getString("soal");
 
                         materi.setText(nama_materi);
 
@@ -87,6 +102,24 @@ public class HomesActivity extends AppCompatActivity {
               openPDf(pdApiUrl);
             }
         });
+
+        btnSoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                // Buat intent untuk membuka Activity_Uji
+                Intent intent = new Intent(HomesActivity.this, Uji.class);
+
+                // Masukkan parameter soal ke dalam intent
+                intent.putExtra("id",id);
+                intent.putExtra("soal", soal2);
+
+                // Mulai Activity_Uji dengan intent yang sudah dibuat
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void openPDf(String pdApiUrl) {
